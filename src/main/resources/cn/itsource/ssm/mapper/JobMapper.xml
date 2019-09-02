@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itsource.ssm.mapper.JobMapper">
+    <resultMap id="BaseResultMap" type="cn.itsource.ssm.zzz.Job">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="address_id" property="address_id" jdbcType="BIGINT"/>
+        <result column="jobnum" property="jobnum" jdbcType="BIGINT"/>
+        <result column="treatment" property="treatment" jdbcType="BIGINT"/>
+        <result column="describes" property="describes" jdbcType="LONGVARCHAR"/>
+        <result column="requires" property="requires" jdbcType="LONGVARCHAR"/>
+        <result column="positiontype" property="positionType" jdbcType="BIT"/>
+        <result column="enabled" property="enabled" jdbcType="BIT"/>
+        <result column="inputdate" property="inputdate" jdbcType="TIMESTAMP"/>
+        <result column="htmlurl" property="htmlurl" jdbcType="VARCHAR"/>
+        <association property="address"
+                     javaType="string"
+                     column="address_id"
+                     select="cn.itsource.ssm.mapper.AddressMapper.findAddress">
+        </association>
+    </resultMap>
+    <insert id="add" parameterType="cn.itsource.ssm.zzz.Job">
+
+        insert into job (title, address_id, jobnum, treatment, describes, requires, positiontype, enabled, inputdate, htmlurl
+        )
+        values (#{title}, #{address_id}, #{jobnum}, #{treatment}, #{describes}, #{requires}, #{positionType}, #{enabled}, #{inputdate}, #{htmlurl}
+        )
+    </insert>
+    <select id="findAll" resultMap="BaseResultMap">
+        select id,title,address_id,jobnum,treatment,describes,requires,positiontype,enabled,inputdate, htmlurl
+        from job
+    </select>
+    <select id="findByQuery" resultMap="BaseResultMap">
+        select id,title,address_id,jobnum,treatment,describes,requires,positiontype,enabled,inputdate,htmlurl
+        from job
+        <where>
+            <if test="title != 'false' and title != null">
+                title like concat('%',#{title},'%')
+            </if>
+            <if test="workingTime == 2">
+                and positiontype = true
+            </if>
+            <if test="workingTime == 3">
+                and positiontype = false
+            </if>
+            <if test="title != null">
+                and enabled = true
+            </if>
+        </where>
+        limit #{offset}, #{limit}
+    </select>
+    <select id="findCount" resultType="int">
+        select count(*) from job
+        <where>
+            <if test="title != null">
+                enabled = true
+            </if>
+        </where>
+    </select>
+    <delete id="delete" parameterType="long">
+        delete from job where id=#{id}
+    </delete>
+    <update id="update"  parameterType="cn.itsource.ssm.zzz.Job">
+        update job set title=#{title}, address_id=#{address_id}, jobnum=#{jobnum}, treatment=#{treatment}, describes=#{describes}, requires=#{requires}, positiontype=#{positionType}, enabled=#{enabled}, htmlurl=#{htmlurl}
+        where id=#{id}
+    </update>
+    <select id="findOne" parameterType="long" resultMap="BaseResultMap">
+        select id,title,address_id,jobnum,treatment,describes,requires,positiontype,enabled,inputdate,htmlurl
+        from job where id=#{id}
+    </select>
+</mapper>

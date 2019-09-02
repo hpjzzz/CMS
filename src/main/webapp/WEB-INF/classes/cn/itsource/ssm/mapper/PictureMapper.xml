@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itsource.ssm.mapper.PictureMapper">
+    <resultMap id="BaseResultMap" type="cn.itsource.ssm.domain.Picture">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="storepath" property="storePath" jdbcType="VARCHAR"/>
+        <result column="intro" property="intro" jdbcType="VARCHAR"/>
+        <result column="isenabled" property="enabled" jdbcType="BIT"/>
+        <result column="inputdate" property="inputDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="add" parameterType="cn.itsource.ssm.domain.Picture">
+
+        insert into picture (storepath, intro, isenabled, inputdate
+        )
+        values (#{storePath}, #{intro}, #{enabled}, #{inputDate}
+        )
+    </insert>
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from picture where isenabled=true
+    </select>
+
+    <select id="findCount" resultType="int">
+        select count(*) from picture
+    </select>
+
+    <select id="loadByQuery" parameterType="cn.itsource.ssm.domain.Condition" resultMap="BaseResultMap">
+        select * from picture limit #{offset},#{limit}
+    </select>
+    <select id="findOne" resultMap="BaseResultMap">
+        select id,storepath,intro,isenabled,inputdate
+        from picture
+        where id=#{id}
+    </select>
+
+    <update id="update"  parameterType="cn.itsource.ssm.domain.Picture">
+        update picture set intro=#{intro},isenabled=#{enabled}
+        where id=#{id}
+    </update>
+</mapper>
